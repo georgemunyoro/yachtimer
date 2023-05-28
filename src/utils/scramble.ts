@@ -12,7 +12,7 @@ export enum ScrambleType {
 export const generateScramble = (scrambleType: ScrambleType): string => {
   const generatedScramble = new Scrambow()
     .setType(scrambleType)
-    .setSeed(1)
+    .setSeed(Math.random() * 1000000)
     .get()[0].scramble_string;
 
   return generatedScramble;

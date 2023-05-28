@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { IconButton, Select } from "@chakra-ui/react";
+import { Badge, IconButton, Select } from "@chakra-ui/react";
 import { SCRAMBLE_OPTIONS, useStore } from "@/store";
 
 const ScramblePicker = () => {
@@ -16,7 +16,7 @@ const ScramblePicker = () => {
   if (!selectedScrambleOption || !selectedScrambleOptionVariation) return null;
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center justify-center gap-2 pb-4">
       <Select
         width="200px"
         className="text-slate-400"

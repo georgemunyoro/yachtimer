@@ -6,7 +6,11 @@ type TimeProps = {
 
 const Time = ({ time }: TimeProps) => {
   if (time === null) return <div>0.00</div>;
-  return <div>{typeof time === "number" ? time : time.time}</div>;
+  return (
+    <div>
+      {((typeof time === "number" ? time : time.time) / 1000).toFixed(2)}
+    </div>
+  );
 };
 
 export default Time;

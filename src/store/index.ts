@@ -53,7 +53,7 @@ export const newUserConfig: UserConfig = {
   selectedSession: DEFAULT_SESSIONS[0].name,
 } as const;
 
-type UserConfig = {
+export type UserConfig = {
   currentScrambleType: ScrambleType;
   selectedScrambleOption: ScrambleOption;
   selectedScrambleOptionVariation: ScrambleOptionVariation;
@@ -80,11 +80,13 @@ type StoreState = {
   sessions: Session[];
   selectedSession: string | null;
   currentTime: Time | null;
+
   generateNewScramble: () => void;
   loadConfig: (config: UserConfig) => void;
   selectScrambleOption: (option: ScrambleOption) => void;
   selectScrambleOptionVariation: (option: ScrambleOptionVariation) => void;
   setSelectedSession: (sessionName: string) => void;
+  recordTime: (time: Time) => void;
 };
 
 export const useStore = create<StoreState>((set) => ({
@@ -96,12 +98,14 @@ export const useStore = create<StoreState>((set) => ({
   sessions: [],
   selectedSession: null,
   currentTime: null,
+
   loadConfig: (config: UserConfig) => {
     set((state) => ({
       ...state,
       ...config,
     }));
   },
+
   generateNewScramble: () => {
     set((state) => ({
       ...state,
@@ -115,6 +119,7 @@ export const useStore = create<StoreState>((set) => ({
           : [...state.scrambleHistory, state.currentScramble],
     }));
   },
+
   selectScrambleOption: (option: ScrambleOption) => {
     set((state) => ({
       ...state,
@@ -123,6 +128,7 @@ export const useStore = create<StoreState>((set) => ({
       currentScrambleType: option.variations[0].scrambleType,
     }));
   },
+
   selectScrambleOptionVariation: (option: ScrambleOptionVariation) => {
     set((state) => ({
       ...state,
@@ -130,10 +136,25 @@ export const useStore = create<StoreState>((set) => ({
       currentScrambleType: option.scrambleType,
     }));
   },
+
   setSelectedSession: (sessionName: string) => {
     set((state) => ({
       ...state,
       selectedSession: sessionName,
+    }));
+  },
+
+  recordTime: (newTime: Time) => {
+    set((state) => ({
+      ...state,
+      sessions: state.sessions.map((s) =>
+        s.name === state.selectedSession
+          ? {
+              ...s,
+              times: [newTime, ...s.times],
+            }
+          : s
+      ),
     }));
   },
 }));
