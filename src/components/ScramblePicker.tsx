@@ -1,42 +1,77 @@
-import {
-  ArrowBackIcon,
-  ArrowForwardIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-} from "@chakra-ui/icons";
-import { Box, Button, IconButton, Select } from "@chakra-ui/react";
+"use client";
 
-const scrambleOptions = [
-  { label: "2x2x2", value: "222" },
-  { label: "3x3x3", value: "333" },
-  { label: "4x4x4", value: "444" },
-  { label: "5x5x5", value: "555" },
-  { label: "6x6x6", value: "666" },
-  { label: "7x7x7", value: "777" },
-];
-
-const scrambleTypeOptions = [
-  {
-    label: "WCA",
-    value: "WCA",
-  },
-];
+import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { IconButton, Select } from "@chakra-ui/react";
+import { SCRAMBLE_OPTIONS, useStore } from "@/store";
 
 const ScramblePicker = () => {
+  const {
+    generateNewScramble,
+    selectScrambleOption,
+    selectedScrambleOption,
+    selectScrambleOptionVariation,
+    selectedScrambleOptionVariation,
+  } = useStore((state) => state);
+
+  if (!selectedScrambleOption || !selectedScrambleOptionVariation) return null;
+
   return (
     <div className="flex gap-2">
-      <Select width="200px" className="text-slate-400" borderColor="slategray" iconColor="slategray">
-        {scrambleTypeOptions.map((option) => (
-          <option value={option.value}>{option.label}</option>
+      <Select
+        width="200px"
+        className="text-slate-400"
+        borderColor="slategray"
+        iconColor="slategray"
+        value={selectedScrambleOption.name}
+        onChange={(e) => {
+          const option = SCRAMBLE_OPTIONS.find(
+            (v) => v.name === e.target.value
+          );
+          if (!option) return;
+          selectScrambleOption(option);
+          generateNewScramble();
+        }}
+      >
+        {SCRAMBLE_OPTIONS.map(({ name }) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
         ))}
       </Select>
-      <Select width="200px" className="text-slate-400" borderColor="slategray" iconColor="slategray">
-        {scrambleOptions.map((option) => (
-          <option value={option.value}>{option.label}</option>
+      <Select
+        width="200px"
+        className="text-slate-400"
+        borderColor="slategray"
+        iconColor="slategray"
+        value={selectedScrambleOptionVariation.name}
+        onChange={(e) => {
+          const variation = selectedScrambleOption.variations.find(
+            (v) => v.name === e.target.value
+          );
+          if (!variation) return;
+          selectScrambleOptionVariation(variation);
+          generateNewScramble();
+        }}
+      >
+        {selectedScrambleOption.variations.map(({ name }) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
         ))}
       </Select>
-      <IconButton background="black" textColor="slategray" aria-label="Previous scramble" icon={<ArrowBackIcon />} />
-      <IconButton background="black" textColor="slategray" aria-label="Next scramble" icon={<ArrowForwardIcon />} />
+      <IconButton
+        background="black"
+        textColor="slategray"
+        aria-label="Previous scramble"
+        icon={<ArrowBackIcon />}
+      />
+      <IconButton
+        background="black"
+        textColor="slategray"
+        aria-label="Next scramble"
+        icon={<ArrowForwardIcon />}
+        onClick={generateNewScramble}
+      />
     </div>
   );
 };

@@ -1,8 +1,12 @@
 "use client";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import "./globals.css";
 import { Roboto } from "next/font/google";
+
+import "./globals.css";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-balham.css";
+import "../styles/ag-theme-yachtimer.scss";
 
 const roboto = Roboto({
   subsets: ["latin"],
