@@ -1,4 +1,10 @@
-import { calculateAO12, calculateAO5 } from "@/utils/averages";
+import {
+  calculateAO100,
+  calculateAO12,
+  calculateAO200,
+  calculateAO25,
+  calculateAO5,
+} from "@/utils/averages";
 import { useMemo } from "react";
 import useCurrentSession from "./useCurrentSession";
 
@@ -23,6 +29,24 @@ const useAverages = () => {
     return times.reduce((prev, current) => prev + current, 0) / 3;
   }, [currentSession]);
 
+  const currentAO25 = useMemo(() => {
+    const times = currentSession?.times.slice(0, 25).map((i) => i.time);
+    if (!times || times.length !== 25) return null;
+    return calculateAO25(times);
+  }, []);
+
+  const currentAO100 = useMemo(() => {
+    const times = currentSession?.times.slice(0, 100).map((i) => i.time);
+    if (!times || times.length !== 100) return null;
+    return calculateAO100(times);
+  }, []);
+
+  const currentAO200 = useMemo(() => {
+    const times = currentSession?.times.slice(0, 200).map((i) => i.time);
+    if (!times || times.length !== 100) return null;
+    return calculateAO200(times);
+  }, []);
+
   const averagesTableRowData = useMemo(() => {
     const hasSingle = (currentSession?.times.length || 0) > 0;
     return [
@@ -38,12 +62,30 @@ const useAverages = () => {
         current: currentAO12,
         best: null,
       },
+      currentAO25 !== null && {
+        label: "ao25",
+        current: currentAO25,
+        best: null,
+      },
+      currentAO100 !== null && {
+        label: "ao100",
+        current: currentAO100,
+        best: null,
+      },
+      currentAO200 !== null && {
+        label: "ao200",
+        current: currentAO200,
+        best: null,
+      },
     ].filter((i) => i);
   }, [currentAO12, currentAO5, currentMO3, currentSession]);
 
   return {
     currentAO5,
     currentAO12,
+    currentAO25,
+    currentAO100,
+    currentAO200,
     averagesTableRowData,
   };
 };

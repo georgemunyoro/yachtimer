@@ -26,3 +26,11 @@ html {
   background: black;
 }
 
+.shown-on-row-hover {
+  display: none;
+}
+
+/* ag-grid adds ag-row-hover class on row hover */
+.ag-row-hover .shown-on-row-hover {
+  display: initial;
+}

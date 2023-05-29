@@ -1,16 +1,12 @@
-import { Time as ITime } from "@/store";
+import { Time as ITime } from "@/store/types";
+import { formatTimeMS } from "@/utils/formatting";
 
 type TimeProps = {
   time: ITime | number | null;
 };
 
-const Time = ({ time }: TimeProps) => {
-  if (time === null) return <div>0.00</div>;
-  return (
-    <div>
-      {((typeof time === "number" ? time : time.time) / 1000).toFixed(2)}
-    </div>
-  );
-};
+const Time = ({ time }: TimeProps) => (
+  <div>{formatTimeMS(typeof time === "number" ? time : time?.time)}</div>
+);
 
 export default Time;

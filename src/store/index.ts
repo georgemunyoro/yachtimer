@@ -1,79 +1,16 @@
 import { ScrambleType, generateScramble } from "@/utils/scramble";
 import { create } from "zustand";
-
-export const SCRAMBLE_OPTIONS: ScrambleOption[] = [
-  {
-    name: "WCA",
-    variations: [
-      { name: "2x2x2", scrambleType: ScrambleType.WCA_222 },
-      { name: "3x3x3", scrambleType: ScrambleType.WCA_333 },
-      { name: "4x4x4", scrambleType: ScrambleType.WCA_444 },
-      { name: "5x5x5", scrambleType: ScrambleType.WCA_555 },
-      { name: "6x6x6", scrambleType: ScrambleType.WCA_666 },
-      { name: "7x7x7", scrambleType: ScrambleType.WCA_777 },
-    ],
-  },
-];
-
-export type Time = {
-  id: string;
-  time: number;
-  date: string;
-  ao5: number;
-  ao12: number;
-};
-
-export type Session = {
-  name: string;
-  times: Time[];
-  scrambleOption: ScrambleOption;
-  scrambleOptionVariation: ScrambleOptionVariation;
-};
-
-const DEFAULT_SESSIONS: Session[] = [
-  {
-    name: "2x2x2",
-    times: [],
-    scrambleOption: SCRAMBLE_OPTIONS[0],
-    scrambleOptionVariation: SCRAMBLE_OPTIONS[0].variations[0],
-  },
-  {
-    name: "3x3x3",
-    times: [],
-    scrambleOption: SCRAMBLE_OPTIONS[0],
-    scrambleOptionVariation: SCRAMBLE_OPTIONS[0].variations[1],
-  },
-];
-
-export const newUserConfig: UserConfig = {
-  currentScrambleType: ScrambleType.WCA_333,
-  selectedScrambleOption: SCRAMBLE_OPTIONS[0],
-  selectedScrambleOptionVariation: SCRAMBLE_OPTIONS[0].variations[1],
-  sessions: DEFAULT_SESSIONS,
-  selectedSession: DEFAULT_SESSIONS[0].name,
-} as const;
-
-export type UserConfig = {
-  currentScrambleType: ScrambleType;
-  selectedScrambleOption: ScrambleOption;
-  selectedScrambleOptionVariation: ScrambleOptionVariation;
-  sessions: Session[];
-  selectedSession: string;
-};
-
-export type ScrambleOption = {
-  name: string;
-  variations: ScrambleOptionVariation[];
-};
-
-export type ScrambleOptionVariation = {
-  name: string;
-  scrambleType: ScrambleType;
-};
+import {
+  ScrambleOption,
+  Session,
+  UserConfig,
+  ScrambleOptionVariation,
+  Time,
+} from "./types";
 
 type StoreState = {
   scrambleHistory: string[];
-  currentScramble: string | null;
+  scrambleIndex: number | null;
   currentScrambleType: ScrambleType | null;
   selectedScrambleOption: ScrambleOption | null;
   selectedScrambleOptionVariation: ScrambleOptionVariation | null;
@@ -82,16 +19,22 @@ type StoreState = {
   currentTime: Time | null;
 
   generateNewScramble: () => void;
+  goToPreviousScramble: () => void;
+  goToNextScramble: () => void;
   loadConfig: (config: UserConfig) => void;
-  selectScrambleOption: (option: ScrambleOption) => void;
-  selectScrambleOptionVariation: (option: ScrambleOptionVariation) => void;
+  setSelectScrambleOption: (option: ScrambleOption) => void;
+  setSelectedScrambleOptionVariation: (option: ScrambleOptionVariation) => void;
   setSelectedSession: (sessionName: string) => void;
   recordTime: (time: Time) => void;
+  deleteTime: (timeId: string) => void;
+  createSession: (sessionName: string) => void;
+  updateSession: (updatedSession: Partial<Session>) => void;
+  deleteSession: (sessionName: string) => void;
 };
 
 export const useStore = create<StoreState>((set) => ({
   scrambleHistory: [],
-  currentScramble: null,
+  scrambleIndex: null,
   currentScrambleType: null,
   selectedScrambleOption: null,
   selectedScrambleOptionVariation: null,
@@ -106,21 +49,51 @@ export const useStore = create<StoreState>((set) => ({
     }));
   },
 
-  generateNewScramble: () => {
-    set((state) => ({
-      ...state,
-      currentScramble:
-        state.currentScrambleType === null
-          ? null
-          : generateScramble(state.currentScrambleType),
-      scrambleHistory:
-        state.currentScramble === null
-          ? state.scrambleHistory
-          : [...state.scrambleHistory, state.currentScramble],
-    }));
+  goToPreviousScramble: () => {
+    set((state) => {
+      if (state.scrambleIndex === null) return state;
+      const newIndex = state.scrambleIndex - 1;
+      return {
+        ...state,
+        scrambleIndex: newIndex < 0 ? 0 : newIndex,
+      };
+    });
   },
 
-  selectScrambleOption: (option: ScrambleOption) => {
+  goToNextScramble: () => {
+    set((state) => {
+      if (state.scrambleIndex === null || state.currentScrambleType === null)
+        return state;
+      const newIndex = state.scrambleIndex + 1;
+      return {
+        ...state,
+        scrambleIndex: newIndex,
+        scrambleHistory:
+          newIndex === state.scrambleHistory.length
+            ? [
+                ...state.scrambleHistory,
+                generateScramble(state.currentScrambleType),
+              ]
+            : state.scrambleHistory,
+      };
+    });
+  },
+
+  generateNewScramble: () => {
+    set((state) => {
+      if (!state.currentScrambleType) return state;
+      return {
+        ...state,
+        scrambleHistory: [
+          ...state.scrambleHistory,
+          generateScramble(state.currentScrambleType),
+        ],
+        scrambleIndex: state.scrambleHistory.length,
+      };
+    });
+  },
+
+  setSelectScrambleOption: (option: ScrambleOption) => {
     set((state) => ({
       ...state,
       selectedScrambleOption: option,
@@ -129,7 +102,7 @@ export const useStore = create<StoreState>((set) => ({
     }));
   },
 
-  selectScrambleOptionVariation: (option: ScrambleOptionVariation) => {
+  setSelectedScrambleOptionVariation: (option: ScrambleOptionVariation) => {
     set((state) => ({
       ...state,
       selectedScrambleOptionVariation: option,
@@ -152,6 +125,63 @@ export const useStore = create<StoreState>((set) => ({
           ? {
               ...s,
               times: [newTime, ...s.times],
+            }
+          : s
+      ),
+    }));
+  },
+
+  deleteTime: (timeId: string) => {
+    set((state) => ({
+      ...state,
+      sessions: state.sessions.map((s) =>
+        s.name === state.selectedSession
+          ? {
+              ...s,
+              times: s.times.filter((i) => i.id !== timeId),
+            }
+          : s
+      ),
+    }));
+  },
+
+  createSession: (sessionName: string) => {
+    set((state) => ({
+      ...state,
+      sessions: [
+        ...state.sessions,
+        {
+          name: sessionName,
+          times: [],
+          scrambleOption: state.selectedScrambleOption as ScrambleOption,
+          scrambleOptionVariation:
+            state.selectedScrambleOptionVariation as ScrambleOptionVariation,
+        },
+      ],
+      selectedSession: sessionName,
+    }));
+  },
+
+  deleteSession: (sessionName: string) => {
+    set((state) => {
+      const newSessions = state.sessions.filter((s) => s.name !== sessionName);
+      return {
+        ...state,
+        sessions: newSessions,
+        selectedSession: newSessions[0].name,
+      };
+    });
+  },
+
+  updateSession: (updatedSession: Partial<Session>) => {
+    set((state) => ({
+      ...state,
+      selectedSession: updatedSession.name || state.selectedSession,
+      sessions: state.sessions.map((s) =>
+        s.name === state.selectedSession
+          ? {
+              ...s,
+              ...updatedSession,
             }
           : s
       ),

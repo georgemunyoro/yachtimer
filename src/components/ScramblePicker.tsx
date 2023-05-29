@@ -1,17 +1,23 @@
 "use client";
 
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { Badge, IconButton, Select } from "@chakra-ui/react";
-import { SCRAMBLE_OPTIONS, useStore } from "@/store";
+import { IconButton, Select } from "@chakra-ui/react";
+import { useStore } from "@/store";
+import { SCRAMBLE_OPTIONS } from "@/store/contants";
+import useSelectedScrambleOption from "@/hooks/useSelectedScrambleOption";
 
 const ScramblePicker = () => {
   const {
     generateNewScramble,
-    selectScrambleOption,
+    setSelectScrambleOption,
     selectedScrambleOption,
-    selectScrambleOptionVariation,
+    setSelectedScrambleOptionVariation,
     selectedScrambleOptionVariation,
+    goToNextScramble,
+    goToPreviousScramble,
   } = useStore((state) => state);
+
+  const { scrambleOption } = useSelectedScrambleOption();
 
   if (!selectedScrambleOption || !selectedScrambleOptionVariation) return null;
 
@@ -28,7 +34,7 @@ const ScramblePicker = () => {
             (v) => v.name === e.target.value
           );
           if (!option) return;
-          selectScrambleOption(option);
+          setSelectScrambleOption(option);
           generateNewScramble();
         }}
       >
@@ -45,15 +51,15 @@ const ScramblePicker = () => {
         iconColor="slategray"
         value={selectedScrambleOptionVariation.name}
         onChange={(e) => {
-          const variation = selectedScrambleOption.variations.find(
+          const variation = scrambleOption?.variations.find(
             (v) => v.name === e.target.value
           );
           if (!variation) return;
-          selectScrambleOptionVariation(variation);
+          setSelectedScrambleOptionVariation(variation);
           generateNewScramble();
         }}
       >
-        {selectedScrambleOption.variations.map(({ name }) => (
+        {selectedScrambleOption?.variations.map(({ name }) => (
           <option key={name} value={name}>
             {name}
           </option>
@@ -64,13 +70,14 @@ const ScramblePicker = () => {
         textColor="slategray"
         aria-label="Previous scramble"
         icon={<ArrowBackIcon />}
+        onClick={goToPreviousScramble}
       />
       <IconButton
         background="black"
         textColor="slategray"
         aria-label="Next scramble"
         icon={<ArrowForwardIcon />}
-        onClick={generateNewScramble}
+        onClick={goToNextScramble}
       />
     </div>
   );

@@ -7,6 +7,7 @@ export enum ScrambleType {
   WCA_555 = "555",
   WCA_666 = "666",
   WCA_777 = "777",
+  WCA_CLOCK = "clock",
 }
 
 export const generateScramble = (scrambleType: ScrambleType): string => {

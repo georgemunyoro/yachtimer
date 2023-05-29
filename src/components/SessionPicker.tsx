@@ -1,10 +1,17 @@
 import { useStore } from "@/store";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { Button, IconButton, Select } from "@chakra-ui/react";
+import { Button, IconButton, Select, useDisclosure } from "@chakra-ui/react";
+import SessionEditorModal, { SessionEditorMode } from "./SessionEditorModal";
+import { useState } from "react";
 
 const SessionPicker = () => {
   const { sessions, selectedSession, setSelectedSession } = useStore(
     (state) => state
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [sessionEditorMode, setSessionEditorMode] = useState<SessionEditorMode>(
+    SessionEditorMode.New
   );
 
   if (!selectedSession) return null;
@@ -27,18 +34,39 @@ const SessionPicker = () => {
         ))}
       </Select>
       <div className="flex gap-2">
-        <Button colorScheme="teal" className="w-full" leftIcon={<AddIcon />}>
+        <Button
+          colorScheme="teal"
+          className="w-full"
+          leftIcon={<AddIcon />}
+          onClick={() => {
+            setSessionEditorMode(SessionEditorMode.New);
+            onOpen();
+          }}
+        >
           New Session
         </Button>
         <IconButton
           aria-label="Rename session"
           icon={<EditIcon />}
           colorScheme="teal"
+          onClick={() => {
+            setSessionEditorMode(SessionEditorMode.Edit);
+            onOpen();
+          }}
         />
         <IconButton
           aria-label="Delete session"
           icon={<DeleteIcon />}
           colorScheme="teal"
+          onClick={() => {
+            setSessionEditorMode(SessionEditorMode.Delete);
+            onOpen();
+          }}
+        />
+        <SessionEditorModal
+          isOpen={isOpen}
+          onClose={onClose}
+          mode={sessionEditorMode}
         />
       </div>
     </div>
