@@ -6,4 +6,4 @@ This is a speedcubing timer application written in TypeScript with Next.js. It p
 
 The name "yachtimer" stands for "Yet Another Cube Timer", indicating that it is another addition to the collection of cube timers available to speedcubers.
 
-![image](https://github.com/georgemunyoro/yachtimer/assets/32019551/20a8e3d0-32f3-4e39-9582-e388ccbcb6e2)
+![image](https://github.com/georgemunyoro/yachtimer/assets/32019551/de48dacf-a3a4-4728-adb4-c87216598bea)
