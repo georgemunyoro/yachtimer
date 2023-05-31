@@ -1,48 +1,59 @@
-import { Metadata } from "next";
-import { Button, Card } from "ui";
+"use client";
 
-const CARD_CONTENT = [
-  {
-    title: "Caching Tasks",
-    href: "https://turbo.build/repo/docs/core-concepts/caching",
-    cta: "Read More",
-  },
-  {
-    title: "Running Tasks",
-    href: "https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks",
-    cta: "Read More",
-  },
-  {
-    title: "Configuration Options",
-    href: "https://turbo.build/repo/docs/reference/configuration",
-    cta: "Read More",
-  },
-];
-
-export const metadata: Metadata = {
-  title: "Web - Turborepo Example",
-};
+import ScramblePicker from "../components/ScramblePicker";
+import Time from "../components/Time";
+import TimesList from "../components/TimesList";
+import { useStore } from "../store";
+import { Box } from "@chakra-ui/react";
+import Timer from "../components/Timer";
+import useAverages from "../hooks/useAverages";
+import { ConfigSync } from "../components/ConfigSync";
+import useCurrentScramble from "../hooks/useCurrentScramble";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <main className="mx-auto w-auto px-4 pt-16 pb-8 sm:pt-24 lg:px-8">
-        <h1 className="mx-auto text-center text-6xl font-extrabold tracking-tight text-white sm:text-7xl lg:text-8xl xl:text-8xl">
-          Web
-          <span className="block bg-gradient-to-r from-brandred to-brandblue bg-clip-text text-transparent px-2">
-            Turborepo Example
-          </span>
-        </h1>
-        <div className="mx-auto mt-5 max-w-xl sm:flex sm:justify-center md:mt-8">
-          <Button />
-        </div>
+  const { currentAO5, currentAO12 } = useAverages();
+  const currentScramble = useCurrentScramble();
 
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 place-content-evenly">
-          {CARD_CONTENT.map((card) => (
-            <Card key={card.title} {...card} />
-          ))}
+  return (
+    <ConfigSync>
+      <div className="w-screen h-screen flex bg-black text-slate-200">
+        <div className="w-[400px] h-full flex flex-col gap-3">
+          <TimesList />
         </div>
-      </main>
-    </div>
+        <div className="w-500 w-full h-full flex flex-col items-center justify-center p-5">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <ScramblePicker />
+            <Box className="text-[2rem] tracking-widest text-center">
+              {currentScramble}
+            </Box>
+          </div>
+          <div className="h-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center -gap-4">
+              <div className="text-[15rem] leading-[15rem] -mt-[8rem]">
+                <Timer />
+              </div>
+              <div className="flex gap-12">
+                {currentAO5 !== null && (
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="text-[4rem] text-slate-500">
+                      <Time time={currentAO5} />
+                    </div>
+                    ao5
+                  </div>
+                )}
+                {currentAO12 !== null && (
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="text-[4rem] text-slate-500">
+                      <Time time={currentAO12} />
+                    </div>
+                    ao12
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ConfigSync>
   );
 }

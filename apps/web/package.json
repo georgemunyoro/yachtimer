@@ -9,10 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.7.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "ag-grid-community": "^29.3.5",
+    "ag-grid-react": "^29.3.5",
+    "framer-motion": "^10.12.16",
     "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ui": "*"
+    "sass": "^1.62.1",
+    "scrambow": "^1.7.0",
+    "ui": "*",
+    "uuid": "^9.0.0",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/node": "^18.11.17",
