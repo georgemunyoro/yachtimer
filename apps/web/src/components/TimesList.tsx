@@ -69,11 +69,11 @@ const TimesList = () => {
           maxWidth: 40,
           cellRenderer: ({ data }: { data: Time }) => {
             return (
-              <div className="flex text-white gap-2 items-center justify-center shown-on-row-hover">
+              <div className="shown-on-row-hover flex items-center justify-center gap-2 text-white">
                 <DeleteIcon
                   onClick={() => deleteTime(data.id)}
                   fontSize="small"
-                  className="!text-slate-600 hover:!text-red-500 cursor-pointer"
+                  className="cursor-pointer !text-slate-600 hover:!text-red-500"
                 />
               </div>
             );
@@ -86,9 +86,9 @@ const TimesList = () => {
   const { averagesTableRowData } = useAverages();
 
   return (
-    <div className="h-screen flex flex-col gap-2 p-5">
+    <div className="flex h-screen flex-col gap-2 p-5">
       <SessionPicker />
-      <div className="w-full ag-theme-balham-dark ag-theme-yachtimer">
+      <div className="ag-theme-balham-dark ag-theme-yachtimer w-full">
         <AgGridReact
           suppressCellFocus={true}
           onGridReady={({ api }) => api.sizeColumnsToFit()}
@@ -103,7 +103,7 @@ const TimesList = () => {
           getRowId={(params) => params.data.label}
         />
       </div>
-      <div className="w-full grow ag-theme-balham-dark ag-theme-yachtimer">
+      <div className="ag-theme-balham-dark ag-theme-yachtimer w-full grow">
         <AgGridReact
           onGridReady={({ api }) => api.sizeColumnsToFit()}
           rowData={times}
