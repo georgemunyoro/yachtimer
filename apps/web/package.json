@@ -1,6 +1,6 @@
 {
-  "name": "yachtimer-web",
-  "version": "0.1.0",
+  "name": "web",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,32 +10,31 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.19",
-    "@chakra-ui/react": "^2.6.1",
+    "@chakra-ui/react": "^2.7.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@types/node": "20.2.5",
-    "@types/react": "18.2.7",
-    "@types/react-dom": "18.2.4",
-    "@types/uuid": "^9.0.1",
     "ag-grid-community": "^29.3.5",
     "ag-grid-react": "^29.3.5",
-    "autoprefixer": "10.4.14",
-    "eslint": "8.41.0",
-    "eslint-config-next": "13.4.4",
     "framer-motion": "^10.12.16",
-    "next": "13.4.4",
-    "postcss": "8.4.23",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "next": "^13.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "sass": "^1.62.1",
     "scrambow": "^1.7.0",
-    "tailwindcss": "3.3.2",
-    "typescript": "5.0.4",
+    "ui": "*",
     "uuid": "^9.0.0",
-    "zustand": "^4.3.8",
-    "ui": "workspace:*"
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
-    "tsconfig": "workspace:*"
+    "@types/node": "^18.11.17",
+    "@types/react": "^18.2.5",
+    "@types/react-dom": "^18.2.4",
+    "autoprefixer": "^10.4.13",
+    "eslint-config-custom": "*",
+    "postcss": "^8.4.20",
+    "tailwind-config": "*",
+    "tailwindcss": "^3.2.4",
+    "tsconfig": "*",
+    "typescript": "^4.9.4"
   }
 }

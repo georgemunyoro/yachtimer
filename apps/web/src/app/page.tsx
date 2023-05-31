@@ -16,25 +16,25 @@ export default function Home() {
 
   return (
     <ConfigSync>
-      <div className="w-screen h-screen flex bg-black text-slate-200">
-        <div className="w-[400px] h-full flex flex-col gap-3">
+      <div className="flex h-screen w-screen bg-black text-slate-200">
+        <div className="flex h-full w-[400px] flex-col gap-3">
           <TimesList />
         </div>
-        <div className="w-500 w-full h-full flex flex-col items-center justify-center p-5">
+        <div className="w-500 flex h-full w-full flex-col items-center justify-center p-5">
           <div className="flex flex-col items-center justify-center gap-2">
             <ScramblePicker />
-            <Box className="text-[2rem] tracking-widest text-center">
+            <Box className="text-center text-[2rem] tracking-widest">
               {currentScramble}
             </Box>
           </div>
-          <div className="h-full flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center -gap-4">
-              <div className="text-[15rem] leading-[15rem] -mt-[8rem]">
+          <div className="flex h-full items-center justify-center">
+            <div className="-gap-4 flex flex-col items-center justify-center">
+              <div className="-mt-[8rem] text-[15rem] leading-[15rem]">
                 <Timer />
               </div>
               <div className="flex gap-12">
                 {currentAO5 !== null && (
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col items-center justify-center">
                     <div className="text-[4rem] text-slate-500">
                       <Time time={currentAO5} />
                     </div>
@@ -42,7 +42,7 @@ export default function Home() {
                   </div>
                 )}
                 {currentAO12 !== null && (
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col items-center justify-center">
                     <div className="text-[4rem] text-slate-500">
                       <Time time={currentAO12} />
                     </div>
