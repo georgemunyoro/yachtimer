@@ -33,19 +33,19 @@ const useAverages = () => {
     const times = currentSession?.times.slice(0, 25).map((i) => i.time);
     if (!times || times.length !== 25) return null;
     return calculateAO25(times);
-  }, []);
+  }, [currentSession?.times]);
 
   const currentAO100 = useMemo(() => {
     const times = currentSession?.times.slice(0, 100).map((i) => i.time);
     if (!times || times.length !== 100) return null;
     return calculateAO100(times);
-  }, []);
+  }, [currentSession?.times]);
 
   const currentAO200 = useMemo(() => {
     const times = currentSession?.times.slice(0, 200).map((i) => i.time);
     if (!times || times.length !== 100) return null;
     return calculateAO200(times);
-  }, []);
+  }, [currentSession?.times]);
 
   const averagesTableRowData = useMemo(() => {
     const hasSingle = (currentSession?.times.length || 0) > 0;
@@ -78,7 +78,15 @@ const useAverages = () => {
         best: null,
       },
     ].filter((i) => i);
-  }, [currentAO12, currentAO5, currentMO3, currentSession]);
+  }, [
+    currentAO100,
+    currentAO12,
+    currentAO200,
+    currentAO25,
+    currentAO5,
+    currentMO3,
+    currentSession?.times,
+  ]);
 
   return {
     currentAO5,
